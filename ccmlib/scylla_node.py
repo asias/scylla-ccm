@@ -338,7 +338,6 @@ class ScyllaNode(Node):
         if '--developer-mode' not in args:
             args += ['--developer-mode', 'true']
         if '--smp' not in args:
-            #args += ['--smp', '1']
             args += ['--smp', str(self._smp)]
         else:
             print "ERROR!!!!!"
@@ -351,7 +350,6 @@ class ScyllaNode(Node):
             args += ['--collectd', '0']
         if '--cpuset' not in args:
             smp = int(args[args.index('--smp') + 1])
-            #smp = _smp + 1
             id = int(data['listen_address'].split('.')[3]) - 1
             cpuset = self.cpuset(id, smp, self.cluster.id)
             args += ['--cpuset', ','.join(cpuset)]
