@@ -72,6 +72,10 @@ class ScyllaNode(Node):
         self._process_jmx_waiter = None
         self._process_scylla = None
         self._process_scylla_waiter = None
+        self._smp = 1
+
+    def set_smp(self, smp):
+        self._smp =  smp
 
     def get_install_cassandra_root(self):
         return os.path.join(self.get_install_dir(), 'resources', 'cassandra')
@@ -334,7 +338,10 @@ class ScyllaNode(Node):
         if '--developer-mode' not in args:
             args += ['--developer-mode', 'true']
         if '--smp' not in args:
-            args += ['--smp', '1']
+            #args += ['--smp', '1']
+            args += ['--smp', str(self._smp)]
+        else:
+            print "ERROR!!!!!"
         if '--memory' not in args:
             args += ['--memory', '512M']
         if '--default-log-level' not in args:
@@ -344,6 +351,7 @@ class ScyllaNode(Node):
             args += ['--collectd', '0']
         if '--cpuset' not in args:
             smp = int(args[args.index('--smp') + 1])
+            #smp = _smp + 1
             id = int(data['listen_address'].split('.')[3]) - 1
             cpuset = self.cpuset(id, smp, self.cluster.id)
             args += ['--cpuset', ','.join(cpuset)]
