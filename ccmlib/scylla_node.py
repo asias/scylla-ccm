@@ -221,12 +221,11 @@ class ScyllaNode(Node):
     def _wait_java_up(self, data):
         java_up = False
         iteration = 0
-        while not java_up and iteration < 300:
+        while not java_up and iteration < 30:
             iteration += 1
             s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             try:
                 s.settimeout(1.0)
-                #print data['listen_address'], self.jmx_port
                 s.connect((data['listen_address'], int(self.jmx_port)))
                 java_up = True
             except:
