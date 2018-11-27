@@ -11,6 +11,7 @@ import stat
 import subprocess
 import time
 import threading
+import datetime
 
 import psutil
 import yaml
@@ -139,6 +140,7 @@ class ScyllaNode(Node):
             self._process_scylla.wait()
 
     def _start_jmx(self, data):
+        print "{}: Start jmx for node {}".format(datetime.datetime.now(), self.name)
         jmx_jar_dir = os.path.join(self.get_path(), 'bin')
         jmx_java_bin = os.path.join(jmx_jar_dir, 'symlinks', 'scylla-jmx')
         jmx_jar = os.path.join(jmx_jar_dir, 'scylla-jmx-1.0.jar')
@@ -174,6 +176,7 @@ class ScyllaNode(Node):
         pid_filename = os.path.join(self.get_path(), 'scylla-jmx.pid')
         with open(pid_filename, 'w') as pid_file:
             pid_file.write(str(self._process_jmx.pid))
+        print "{}: Finished jmx for node {}".format(datetime.datetime.now(), self.name)
 
     def _start_scylla(self, args, marks, update_pid, wait_other_notice,
                       wait_for_binary_proto):
@@ -364,10 +367,12 @@ class ScyllaNode(Node):
                                             wait_for_binary_proto)
         self._start_jmx(data)
 
+        print "{}: Started wait for java up for node {}".format(datetime.datetime.now(), self.name)
         if not self._wait_java_up(data):
             e_msg = ("Error starting node %s: unable to connect to scylla-jmx" %
                      self.name)
             raise NodeError(e_msg, scylla_process)
+        print "{}: Finisehd wait for java up for node {}".format(datetime.datetime.now(), self.name)
 
         self.is_running()
 
