@@ -456,6 +456,7 @@ class Node(object):
         """
         tofind = nodes if isinstance(nodes, list) else [nodes]
         tofind = ["%s.* now UP" % node.address() for node in tofind]
+        print "self.name={}, tofind={},from_mark={},file={}".format(self.name, tofind, from_mark, filename)
         self.watch_log_for(tofind, from_mark=from_mark, timeout=timeout, filename=filename)
 
     def wait_for_binary_interface(self, **kwargs):
